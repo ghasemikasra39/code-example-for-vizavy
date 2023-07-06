@@ -1,4 +1,4 @@
-Youpendo App
+Test App
 ============
 
 Description
