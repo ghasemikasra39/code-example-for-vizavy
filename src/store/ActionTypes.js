@@ -1,0 +1,2 @@
+export const FETCH_NEW_NOTIFICATIONS = 'FETCH_NEW_NOTIFICATIONS';
+export const CANCEL = 'CANCEL';

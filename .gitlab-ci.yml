@@ -1,0 +1,49 @@
+image: node:10-jessie
+
+variables:
+  NVM_DIR: $CI_PROJECT_DIR/.nvm
+  NPM_CACHE: $CI_PROJECT_DIR/.npm_cache
+  YARN_CACHE_FOLDER: $CI_PROJECT_DIR/.yarn_cache
+
+.cache_config: &cache_config
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .jest
+    - .nvm
+    - .npm_cache
+    - .yarn_cache
+
+.install_dependencies: &install_dependencies
+  - cp .env.dist .env
+#  - . /nvm/init.sh
+  - npm config set cache $NPM_CACHE --global
+#  - npm install --global yarn
+  - yarn config set cache-folder $YARN_CACHE_FOLDER
+  - yarn install
+
+stages:
+  - prepare
+  - lint
+  - test
+
+prepare:
+  stage: prepare
+  cache:
+    <<: *cache_config
+  script: *install_dependencies
+
+eslint:
+  stage: lint
+  cache:
+    <<: *cache_config
+  before_script: *install_dependencies
+  script:
+    - yarn lint
+
+jest:
+  stage: test
+  cache:
+    <<: *cache_config
+  before_script: *install_dependencies
+  script:
+    - yarn test-ci
